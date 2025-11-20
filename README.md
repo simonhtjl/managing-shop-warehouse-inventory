@@ -1,7 +1,7 @@
 # managing-shop-warehouse-inventory
 Managing shop warehouse inventory dikembangkan dengan arsitektur microservices, di mana setiap fungsi bisnis seperti authentication, manajemen produk, proses transaksi, dan pelaporan dibagi menjadi service-service yang independen dan terpisah. Sistem ini menggunakan Spring Boot 3.x dengan Java 17 sebagai foundation teknologi, dimana API Gateway berfungsi sebagai pintu masuk tunggal yang mengatur routing request dan melakukan validasi JWT token untuk keamanan. Setiap microservice seperti Auth Service, Product Service, Sale Service, dan Report Service berjalan secara mandiri dengan port masing-masing dan berkomunikasi melalui REST API.
 Untuk penyimpanan data, sistem memanfaatkan H2 In-Memory Database yang memberikan kecepatan tinggi dalam development karena data disimpan di memory. Setiap service memiliki database H2 terpisah yang terisolasi, memastikan data tidak tercampur antara modul yang berbeda. Konfigurasi H2 yang zero-configuration memudahkan setup tanpa perlu instalasi database server terpisah, sementara fitur auto-create table memungkinkan schema database otomatis terbentuk dari entity classes. Autentikasi sistem menggunakan JSON Web Token (JWT) yang bersifat stateless, dimana token yang di-generate setelah login berisi informasi user dan role yang kemudian divalidasi oleh API Gateway sebelum request diteruskan ke service tujuan. Arsitektur ini memungkinkan skalabilitas yang baik, maintenance yang lebih mudah, dan development yang cepat dengan teknologi modern yang robust.
-|===================================================================|
+
 # Architecture
   Client
       ↓
@@ -13,7 +13,6 @@ Untuk penyimpanan data, sistem memanfaatkan H2 In-Memory Database yang memberika
   │  Sale Service     (Port 8083)   │ - Transaksi Penjualan
   │  Report Service   (Port 8084)   │ - Laporan & Analytics
   └─────────────────────────────────┘
-|===================================================================|
 
 # Download dan running di lokal
   cd auth-service
@@ -35,7 +34,6 @@ Untuk penyimpanan data, sistem memanfaatkan H2 In-Memory Database yang memberika
   cd api-gateway
   mvn spring-boot:run
   API Gateway: http://localhost:8080
-|===================================================================|
 
 # Database H2 (in memory)
   Auth Service
@@ -60,7 +58,6 @@ Untuk penyimpanan data, sistem memanfaatkan H2 In-Memory Database yang memberika
   URL: http://localhost:8084/h2-console
   JDBC URL: jdbc:h2:mem:reportdb
   Username: sa  
-|===================================================================|
 
 # Login admin default
   Username: admin
@@ -72,7 +69,6 @@ Untuk penyimpanan data, sistem memanfaatkan H2 In-Memory Database yang memberika
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"admin"}'
 
-|===================================================================|
 
 # POSTMAN COLLECTION
 {
