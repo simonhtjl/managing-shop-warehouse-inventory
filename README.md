@@ -37,57 +37,6 @@ Untuk penyimpanan data, sistem memanfaatkan H2 In-Memory Database yang memberika
   API Gateway: http://localhost:8080
 |===================================================================|
 
-# Login admin default
-  Username: admin
-  Password: admin
-  Role: ADMIN
-|===================================================================|
-
-# Login to get token
-  curl -X POST http://localhost:8080/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"admin"}'
-
-# Get all product
-  curl -X GET "http://localhost:8080/api/products" \
-  -H "Authorization: Bearer YOUR_TOKEN_HERE"
-
-# Find prodcut by name
-  curl -X GET "http://localhost:8080/api/products" \
-  -H "Authorization: Bearer YOUR_TOKEN_HERE"
-
-# Find by scan barcode
-  curl -X GET "http://localhost:8080/api/products/barcode/8999999100011" \
-  -H "Authorization: Bearer YOUR_TOKEN_HERE"
-
-# Making transaction
-  curl -X POST http://localhost:8080/api/sales \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer YOUR_TOKEN_HERE" \
-    -d '{
-      "cashierName": "admin",
-      "cashReceived": 50000,
-      "items": [
-      {
-          "productId": 1,
-          "quantity": 2
-        },
-        {
-          "productId": 2, 
-          "quantity": 1
-        }
-      ]
-    }'
-
-# Daily report
-  curl -X GET "http://localhost:8080/api/reports/daily" \
-  -H "Authorization: Bearer YOUR_TOKEN_HERE"
-
-# Best seller
-curl -X GET "http://localhost:8080/api/reports/top-products?limit=5" \
-  -H "Authorization: Bearer YOUR_TOKEN_HERE"
-|===================================================================|
-
 # Database H2 (in memory)
   Auth Service
   URL: http://localhost:8081/h2-console
@@ -111,26 +60,456 @@ curl -X GET "http://localhost:8080/api/reports/top-products?limit=5" \
   URL: http://localhost:8084/h2-console
   JDBC URL: jdbc:h2:mem:reportdb
   Username: sa  
-  Password: (kosong)
 |===================================================================|
 
-# End-point list
-  POST /auth/login - Login user
-  GET /api/products - Ambil semua produk
-  GET /api/products/{id} - Ambil produk by ID
-  GET /api/products/barcode/{barcode} - Scan barcode
-  GET /api/products/search?keyword={} - Cari produk
-  POST /api/products - Tambah produk baru
-  PUT /api/products/{id} - Update produk
-  PUT /api/products/{id}/stock - Update stok
-  DELETE /api/products/{id} - Hapus produk
-  POST /api/sales - Buat transaksi penjualan
-  GET /api/sales - Lihat semua transaksi
-  GET /api/sales/{id} - Lihat detail transaksi
-  GET /api/sales/today - Transaksi hari ini
-  GET /api/sales/by-date - Transaksi by range tanggal
-  GET /api/reports/daily - Laporan harian
-  GET /api/reports/weekly - Laporan mingguan
-  GET /api/reports/top-products - Produk terlaris
+# Login admin default
+  Username: admin
+  Password: admin
+  Role: ADMIN
+
+# Login to get token
+  curl -X POST http://localhost:8080/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"admin"}'
+
 |===================================================================|
+
+# POSTMAN COLLECTION
+{
+  "info": {
+    "name": "managing-shop-warehouse-inventory",
+    "description": "-",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "AUTH ENDPOINTS",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/auth/login",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Validate Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/auth/validate",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["auth", "validate"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "PRODUCT ENDPOINTS",
+      "item": [
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/products",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "products"]
+            }
+          }
+        },
+        {
+          "name": "Get Product by Barcode",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/products/barcode/123456789",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "products", "barcode", "123456789"]
+            }
+          }
+        },
+        {
+          "name": "Search Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/products/search?keyword=indomie",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "products", "search"],
+              "query": [
+                {
+                  "key": "keyword",
+                  "value": "indomie"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Indomie Goreng\",\n    \"barcode\": \"123456789\",\n    \"price\": 3500,\n    \"stock\": 100,\n    \"category\": \"FOOD\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/products",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "products"]
+            }
+          }
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Indomie Goreng Special\",\n    \"price\": 4000,\n    \"stock\": 80\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/products/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "products", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Stock",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/products/1/stock?quantity=50",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "products", "1", "stock"],
+              "query": [
+                {
+                  "key": "quantity",
+                  "value": "50"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "SALES ENDPOINTS",
+      "item": [
+        {
+          "name": "Create Sale",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"customerName\": \"John Doe\",\n    \"items\": [\n        {\n            \"productId\": 1,\n            \"quantity\": 2,\n            \"unitPrice\": 3500\n        }\n    ],\n    \"paymentMethod\": \"CASH\",\n    \"totalAmount\": 7000\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/sales",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "sales"]
+            }
+          }
+        },
+        {
+          "name": "Get All Sales",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/sales",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "sales"]
+            }
+          }
+        },
+        {
+          "name": "Get Sale by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/sales/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "sales", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Today Sales",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/sales/today",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "sales", "today"]
+            }
+          }
+        },
+        {
+          "name": "Get Sales by Date Range",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/sales/by-date?startDate=2025-11-01&endDate=2025-11-20",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "sales", "by-date"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2025-11-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2025-11-20"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "REPORT ENDPOINTS",
+      "item": [
+        {
+          "name": "Get Daily Report (Today)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/reports/daily",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "reports", "daily"]
+            }
+          }
+        },
+        {
+          "name": "Get Daily Report by Date",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/reports/daily/2025-11-20",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "reports", "daily", "2025-11-20"]
+            }
+          }
+        },
+        {
+          "name": "Get Weekly Report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/reports/weekly",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "reports", "weekly"]
+            }
+          }
+        },
+        {
+          "name": "Get Top Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/reports/top-products?limit=10",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "reports", "top-products"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "token",
+      "value": "your-jwt-token-here",
+      "type": "string"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "console.log('Supermarket API Collection');"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test(\"Status code is 200\", function () {",
+          "    pm.response.to.have.status(200);",
+          "});"
+        ]
+      }
+    }
+  ]
+}
   
