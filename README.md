@@ -15,7 +15,7 @@ Untuk penyimpanan data, sistem memanfaatkan H2 In-Memory Database yang memberika
   └─────────────────────────────────┘
 |===================================================================|
 
-# Setup and running
+# Download dan running di lokal
   cd auth-service
   mvn spring-boot:run
   Auth Service: http://localhost:8081
