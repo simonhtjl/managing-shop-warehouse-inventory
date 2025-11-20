@@ -37,30 +37,30 @@ Untuk penyimpanan data, sistem memanfaatkan H2 In-Memory Database yang memberika
   API Gateway: http://localhost:8080
 |===================================================================|
 
-#login admin default
+# Login admin default
   Username: admin
   Password: admin
   Role: ADMIN
 |===================================================================|
 
-#login to get token
+# Login to get token
   curl -X POST http://localhost:8080/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"admin"}'
 
-#  get all product
+# Get all product
   curl -X GET "http://localhost:8080/api/products" \
   -H "Authorization: Bearer YOUR_TOKEN_HERE"
 
-#find prodcut by name
+# Find prodcut by name
   curl -X GET "http://localhost:8080/api/products" \
   -H "Authorization: Bearer YOUR_TOKEN_HERE"
 
-#find by scan barcode
+# Find by scan barcode
   curl -X GET "http://localhost:8080/api/products/barcode/8999999100011" \
   -H "Authorization: Bearer YOUR_TOKEN_HERE"
 
-#make transaction
+# Making transaction
   curl -X POST http://localhost:8080/api/sales \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer YOUR_TOKEN_HERE" \
@@ -79,16 +79,16 @@ Untuk penyimpanan data, sistem memanfaatkan H2 In-Memory Database yang memberika
       ]
     }'
 
-#daily report
+# daily report
   curl -X GET "http://localhost:8080/api/reports/daily" \
   -H "Authorization: Bearer YOUR_TOKEN_HERE"
 
-#best seller
+# best seller
 curl -X GET "http://localhost:8080/api/reports/top-products?limit=5" \
   -H "Authorization: Bearer YOUR_TOKEN_HERE"
 |===================================================================|
 
-#Database H2 (in memory)
+# Database H2 (in memory)
   Auth Service
   URL: http://localhost:8081/h2-console
   JDBC URL: jdbc:h2:mem:authdb
@@ -114,7 +114,7 @@ curl -X GET "http://localhost:8080/api/reports/top-products?limit=5" \
   Password: (kosong)
 |===================================================================|
 
-#End point list
+# End-point list
   POST /auth/login - Login user
   GET /api/products - Ambil semua produk
   GET /api/products/{id} - Ambil produk by ID
