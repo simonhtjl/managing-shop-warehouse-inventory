@@ -495,7 +495,7 @@ Untuk penyimpanan data, sistem memanfaatkan H2 In-Memory Database yang memberika
       "script": {
         "type": "text/javascript",
         "exec": [
-          "console.log('Supermarket API Collection');"
+          "console.log('Managing-shop-warehouse API Collection');"
         ]
       }
     },
