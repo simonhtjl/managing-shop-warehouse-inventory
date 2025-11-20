@@ -75,7 +75,7 @@ Untuk penyimpanan data, sistem memanfaatkan H2 In-Memory Database yang memberika
   "info": {
     "name": "managing-shop-warehouse-inventory",
     "description": "-",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "schema": "-"
   },
   "item": [
     {
